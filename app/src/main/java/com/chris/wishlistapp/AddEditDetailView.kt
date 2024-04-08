@@ -1,16 +1,14 @@
 package com.chris.wishlistapp
 
-import android.icu.number.NumberFormatter.UnitWidth
-import android.widget.Space
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -21,9 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,6 +41,7 @@ fun AddEditDetailView(
                 if (id != 0L) stringResource(id = R.string.update_wish)
                 else stringResource(id = R.string.add_wish)
             )
+            { navController.navigateUp() }
         }
     ) {
         Column (
@@ -51,6 +52,50 @@ fun AddEditDetailView(
             verticalArrangement = Arrangement.Center
             ) {
             Spacer(modifier = Modifier.height(10.dp))
+
+            WishTextField(
+                label = "Title",
+                value = viewModel.wishTitleState,
+                onValueChanged = {
+                    viewModel.wishTitleChanges(it)
+                } )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            WishTextField(
+                label = "Description",
+                value = viewModel.wishDescriptionState,
+                onValueChanged = {
+                    viewModel.wishDescriptionChanges(it)
+                } )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Button(onClick = {
+                if(
+                    viewModel.wishTitleState.isNotEmpty() &&
+                    viewModel.wishDescriptionState.isNotEmpty()
+                    ) {
+
+                    //TODO Update Wish
+                } else {
+
+                    //TODO Add Wish
+                }
+
+            }) {
+                Text(
+                    text = if (id != 0L) {
+                        stringResource(id = R.string.update_wish)
+                    }
+                    else {
+                        stringResource(id = R.string.add_wish)
+                    },
+                    style = TextStyle(
+                        fontSize = 18.sp
+                    )
+                )
+            }
 
         }
     }

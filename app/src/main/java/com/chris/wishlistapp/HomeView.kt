@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.chris.wishlistapp.data.DummyWish
 import com.chris.wishlistapp.data.Wish
 import androidx.compose.material3.CardElevation as Material3CardElevation
@@ -33,7 +34,10 @@ import androidx.compose.material3.CardElevation as Material3CardElevation
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
-fun HomeView(){
+fun HomeView(
+    navController: NavController,
+    viewModel: WishViewModel
+){
 
     val context = LocalContext.current
 
@@ -55,6 +59,7 @@ fun HomeView(){
                 containerColor = Color.Black,
                 onClick = {
                     Toast.makeText(context, "Button Clicked", Toast.LENGTH_LONG).show()
+                    navController.navigate(Screen.AddScreen.route)
                 }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
             }
