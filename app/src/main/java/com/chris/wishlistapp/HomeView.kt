@@ -1,7 +1,10 @@
 package com.chris.wishlistapp
 
 import android.widget.Toast
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,6 +17,7 @@ import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberDismissState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -26,6 +30,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -92,8 +98,24 @@ fun HomeView(
 
                     SwipeToDismiss(
                         state = dismissState,
-                        background = {},
-                        directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
+                        background = {
+                            val color by animateColorAsState(
+                                targetValue = if (dismissState.dismissDirection
+                                    == DismissDirection.EndToStart) Color.Red else Color.Transparent,
+                                label = ""
+                            )
+                            val alignment = Alignment.CenterEnd
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(color)
+                                    .padding(horizontal = 20.dp),
+                                contentAlignment = alignment
+                            ) {
+                                Icon(Icons.Default.Delete, contentDescription = "Delete Icon", tint = Color.White)
+                            }
+                        },
+                        directions = setOf(DismissDirection.EndToStart),
                         dismissThresholds = {FractionalThreshold(0.25f)},
                         dismissContent = {
                             WishItem(wish = wish) {
