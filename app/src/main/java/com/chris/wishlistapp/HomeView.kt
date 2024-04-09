@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -58,22 +59,25 @@ fun HomeView(
                 contentColor = Color.White,
                 containerColor = Color.Black,
                 onClick = {
-                    Toast.makeText(context, "Button Clicked", Toast.LENGTH_LONG).show()
-                    navController.navigate(Screen.AddScreen.route)
+                    Toast.makeText(context, "Add New Wish", Toast.LENGTH_LONG).show()
+                    navController.navigate(Screen.AddScreen.route + "/0L")
+
                 }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
             }
         }
     ) {
+        val wishList = viewModel.getAllWishes.collectAsState(initial = listOf())
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it),
             content = {
-                items(DummyWish.wishList) {
+                items(wishList.value) {
                     wish -> WishItem(wish = wish) {
-
-                }
+                        val id = wish.id
+                        navController.navigate(Screen.AddScreen.route + "/$id")
+                    }
                 }
             }
         )

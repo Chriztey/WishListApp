@@ -16,6 +16,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.chris.wishlistapp.data.Wish
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,6 +52,14 @@ fun AddEditDetailView(
     // Make sure that UI is updated once something changes :
 
     val scaffoldState = rememberScaffoldState()
+    if (id != 0L) {
+        val wish = viewModel.getAWishById(id).collectAsState(initial = Wish(0L, "", ""))
+        viewModel.wishTitleState = wish.value.title
+        viewModel.wishDescriptionState = wish.value.description
+    } else {
+        viewModel.wishTitleState = ""
+        viewModel.wishDescriptionState = ""
+    }
 
     Scaffold (
         scaffoldState = scaffoldState,
@@ -98,6 +108,14 @@ fun AddEditDetailView(
 
                     if(id != 0L) {
                         //TODO Update
+                        viewModel.updateWish(
+                            Wish(
+                            id,
+                            viewModel.wishTitleState.trim(),
+                            viewModel.wishDescriptionState.trim()
+                        ))
+                        snackMessage.value = "Wish has been updated"
+
                     } else {
                         // add Wish
                         viewModel.addWish(Wish(
@@ -105,6 +123,9 @@ fun AddEditDetailView(
                             description = viewModel.wishDescriptionState.trim()
                         ))
                         snackMessage.value = "Wish has been created"
+
+
+
                     }
 
                 } else {
@@ -115,6 +136,9 @@ fun AddEditDetailView(
                 scope.launch {
                     scaffoldState.snackbarHostState.showSnackbar(snackMessage.value)
                     navController.navigateUp()
+                    //viewModel.wishDescriptionChanges("")
+                    //viewModel.wishTitleChanges("")
+
                 }
 
             }) {
