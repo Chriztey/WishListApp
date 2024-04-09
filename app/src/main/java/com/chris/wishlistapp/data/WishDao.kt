@@ -18,6 +18,7 @@ abstract class WishDao {
 
     // "Select * from 'wish-table'" Loads all wishes from the wish table
     // * means all
+
     @Query("Select * from 'wish-table'")
     // no need to add in the suspend key word because already using flow
     abstract fun getAllWishes(): Flow<List<Wish>>
